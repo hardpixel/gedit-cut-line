@@ -1,0 +1,9 @@
+[Plugin]
+Loader=python3
+Module=cut_line
+IAge=3
+Name=Cut Line
+Description=Cut lines with CTRL+X if no text is selected.
+Authors=Jonian Guveli <jonian@hardpixel.eu>
+Copyright=Copyright © 2012 Hardpixel
+Website=http://hardpixel.eu
