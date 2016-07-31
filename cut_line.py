@@ -1,6 +1,4 @@
-from gi.repository import GObject, Gio, Gtk, Gedit, Gdk
-
-import os
+from gi.repository import GObject, Gtk, Gedit, Gdk
 
 class CutLineWindowActivatable(GObject.Object, Gedit.WindowActivatable):
 
