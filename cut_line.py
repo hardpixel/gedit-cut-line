@@ -1,4 +1,11 @@
-from gi.repository import GObject, Gtk, Gedit, Gdk
+import gi
+
+gi.require_version('Gdk', '3.0')
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gedit', '3.0')
+
+from gi.repository import GObject, Gdk, Gtk, Gedit
+
 
 class CutLineWindowActivatable(GObject.Object, Gedit.WindowActivatable):
 
@@ -8,21 +15,21 @@ class CutLineWindowActivatable(GObject.Object, Gedit.WindowActivatable):
 		GObject.Object.__init__(self)
 
 	def do_activate(self):
-		self.handler_id = self.window.connect('key-press-event', self.on_key_press)
+		self._handler_id = self.window.connect('key-press-event', self.on_key_press)
 
 	def do_deactivate(self):
-		self.window.disconnect(self.handler_id)
+		self.window.disconnect(self._handler_id)
 
 	def on_key_press(self, term, event):
-		modifiers = event.state & Gtk.accelerator_get_default_mod_mask()
-
 		if event.keyval in (Gdk.KEY_X, Gdk.KEY_x):
+			modifiers = event.state & Gtk.accelerator_get_default_mod_mask()
+
 			if modifiers == Gdk.ModifierType.CONTROL_MASK:
-				self.on_cut_line_key_press(self)
+				self.cut_line()
 
 		return False
 
-	def on_cut_line_key_press(self, action=None, user_data=None):
+	def cut_line(self):
 		doc = self.window.get_active_document()
 		selection_iter = doc.get_selection_bounds()
 
