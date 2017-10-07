@@ -14,6 +14,8 @@ class CutLineWindowActivatable(GObject.Object, Gedit.WindowActivatable):
 	def __init__(self):
 		GObject.Object.__init__(self)
 
+		self._handler_id = None
+
 	def do_activate(self):
 		self._handler_id = self.window.connect('key-press-event', self.on_key_press)
 
@@ -30,20 +32,25 @@ class CutLineWindowActivatable(GObject.Object, Gedit.WindowActivatable):
 		return False
 
 	def cut_line(self):
-		doc = self.window.get_active_document()
-		selection_iter = doc.get_selection_bounds()
+		doc    = self.window.get_active_document()
+		bounds = doc.get_selection_bounds()
 
-		if len(selection_iter) == 0:
-			view = self.window.get_active_view()
+		if len(bounds) == 0:
 			itstart = doc.get_iter_at_mark(doc.get_insert())
-			offset = itstart.get_line_offset()
+			loffset = itstart.get_line_offset()
 			itstart.set_line_offset(0)
+
 			itend = doc.get_iter_at_mark(doc.get_insert())
 			itend.forward_line()
+
 			doc.begin_user_action()
 			doc.select_range(itstart, itend)
+
+			view = self.window.get_active_view()
 			view.cut_clipboard()
+
 			itstart = doc.get_iter_at_mark(doc.get_insert())
-			itstart.set_line_offset(offset)
+			itstart.set_line_offset(loffset)
+
 			doc.end_user_action()
 			doc.place_cursor(itstart)
