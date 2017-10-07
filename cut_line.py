@@ -29,8 +29,6 @@ class CutLineWindowActivatable(GObject.Object, Gedit.WindowActivatable):
       if modifiers == Gdk.ModifierType.CONTROL_MASK:
         self.cut_line()
 
-    return False
-
   def cut_line(self):
     doc    = self.window.get_active_document()
     bounds = doc.get_selection_bounds()
